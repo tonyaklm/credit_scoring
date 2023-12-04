@@ -1,0 +1,27 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet author="antonina" id="load-product-data">
+        <loadData file="product.csv" tableName="product">
+            <column name="id" header="id" />
+            <column name="title" header="title" />
+            <column name="code" header="code" />
+            <column name="min_term" header="min_term" />
+            <column name="max_term" header="max_term" />
+            <column name="min_principal" header="min_principal" />
+            <column name="max_principal" header="max_principal" />
+            <column name="min_interest" header="min_interest" />
+            <column name="max_interest" header="max_interest" />
+            <column name="min_origination" header="min_origination" />
+            <column name="max_origination" header="max_origination" />
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

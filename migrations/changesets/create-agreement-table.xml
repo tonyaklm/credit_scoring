@@ -1,0 +1,68 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+    
+    <changeSet author="antonina" id="create-agreement-table">
+        <createTable tableName="agreement" remarks="Таблица договоров">
+            <column autoIncrement="true" name="id" type="INTEGER" remarks="Индекс договора">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="agreement_pkey"/>
+            </column>
+
+            <column name="product_id" type="INTEGER" remarks="Номер родукта, к которому относится договор">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_name" type="VARCHAR" remarks="ФИО клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_age" type="INTEGER" remarks="Возраст клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_phone_number" type="VARCHAR" remarks="Номер телефона клиента">
+                <constraints nullable="false"/>
+            </column>
+
+             <column name="client_passport_number" type="VARCHAR" remarks="Серия и номер паспорта клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_salary" type="INTEGER" remarks="Месячный доход по мнению клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="term" type="INTEGER" remarks="Срок кредита в мес">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="principal" type="INTEGER" remarks="Сумма кредита">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="interest" type="INTEGER" remarks="Процентная ставка по кредиту">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="origination" type="INTEGER" remarks="Сумма комиссий по кредиту">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="activation_time" type="TIMESTAMP" remarks="Дата и время активации договора">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR" defaultValue="new" remarks="Статус договора (новый, активированный, закрытый)">
+                <constraints nullable="false" checkConstraint="status IN ('new', 'active', 'finished')" />
+            </column>
+
+        </createTable>
+    </changeSet>
+    
+</databaseChangeLog>
