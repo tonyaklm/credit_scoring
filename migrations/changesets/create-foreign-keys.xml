@@ -12,6 +12,7 @@
 
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="agreement" constraintName="product_fk" referencedColumnNames="id" referencedTableName="product" />
         <addForeignKeyConstraint baseColumnNames="agreement_id" baseTableName="schedule_payment" constraintName="agreement_fk" referencedColumnNames="id" referencedTableName="agreement" />
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="agreement" constraintName="client_fk" referencedColumnNames="id" referencedTableName="client" />
 
     </changeSet>
 

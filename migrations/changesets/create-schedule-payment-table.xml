@@ -18,23 +18,23 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="planned_date" type="TIMESTAMP" remarks="Планируемая дата платежа">
+            <column name="planned_date" type="TIMESTAMP WITH TIME ZONE" remarks="Планируемая дата платежа">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="beginning_of_the_period" type="TIMESTAMP" remarks="Период, за который выплачивается долг, дата ОТ">
+            <column name="beginning_of_the_period" type="TIMESTAMP WITH TIME ZONE" remarks="Период, за который выплачивается долг, дата ОТ">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="end_of_the_period" type="TIMESTAMP" remarks="Период, за который выплачивается долг, дата ДО">
+            <column name="end_of_the_period" type="TIMESTAMP WITH TIME ZONE" remarks="Период, за который выплачивается долг, дата ДО">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="principal_amount" type="INTEGER" remarks="Сумма выплаты для погашения тела долга">
+            <column name="principal_amount" type="FLOAT" remarks="Сумма выплаты для погашения тела долга">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="interest_amount" type="INTEGER" remarks="Сумма выплаты для погашения процентов по долгу">
+            <column name="interest_amount" type="FLOAT" remarks="Сумма выплаты для погашения процентов по долгу">
                 <constraints nullable="false"/>
             </column>
 

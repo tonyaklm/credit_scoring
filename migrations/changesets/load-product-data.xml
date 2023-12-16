@@ -10,17 +10,6 @@
 
     <changeSet author="antonina" id="load-product-data">
         <loadData file="product.csv" tableName="product">
-            <column name="id" header="id" />
-            <column name="title" header="title" />
-            <column name="code" header="code" />
-            <column name="min_term" header="min_term" />
-            <column name="max_term" header="max_term" />
-            <column name="min_principal" header="min_principal" />
-            <column name="max_principal" header="max_principal" />
-            <column name="min_interest" header="min_interest" />
-            <column name="max_interest" header="max_interest" />
-            <column name="min_origination" header="min_origination" />
-            <column name="max_origination" header="max_origination" />
         </loadData>
     </changeSet>
 

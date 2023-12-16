@@ -14,11 +14,19 @@
         </createIndex>
 
         <createIndex tableName="agreement" indexName="client_index">
-            <column name="client_passport_number"/>
+            <column name="client_id"/>
         </createIndex>
 
         <createIndex tableName="schedule_payment" indexName="agreement_index">
             <column name="agreement_id"/>
+        </createIndex>
+
+        <createIndex tableName="product" indexName="code_index">
+            <column name="code"/>
+        </createIndex>
+
+        <createIndex tableName="product" indexName="title_index">
+            <column name="title"/>
         </createIndex>
 
     </changeSet>

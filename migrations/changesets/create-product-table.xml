@@ -22,35 +22,35 @@
                 <constraints nullable="false" unique="true" uniqueConstraintName="code_sk"/>
             </column>
 
-            <column name="min_term" type="INTEGER" remarks="Минимальный срок кредита">
+            <column name="min_term" type="INTEGER" remarks="Минимальный срок кредита мес">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="max_term" type="INTEGER" remarks="Максимальный срок кредита">
+            <column name="max_term" type="INTEGER" remarks="Максимальный срок кредита мес">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="min_principal" type="INTEGER" remarks="Минимальная возможная сумма кредита">
+            <column name="min_principal" type="FLOAT" remarks="Минимальная возможная сумма кредита">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="max_principal" type="INTEGER" remarks="Максимальная возможная сумма кредита ">
+            <column name="max_principal" type="FLOAT" remarks="Максимальная возможная сумма кредита ">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="min_interest" type="INTEGER" remarks="Минимальная процентная ставка, под которую клиент может получить кредит">
+            <column name="min_interest" type="FLOAT" remarks="Минимальная процентная ставка, под которую клиент может получить кредит">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="max_interest" type="INTEGER" remarks="Максимальная процентная ставка, под которую клиент может получить кредит">
+            <column name="max_interest" type="FLOAT" remarks="Максимальная процентная ставка, под которую клиент может получить кредит">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="min_origination" type="INTEGER" remarks="Минимальная сумма комиссий, которая прибавится к полной стоимости кредита">
+            <column name="min_origination" type="FLOAT" remarks="Минимальная сумма комиссий, которая прибавится к полной стоимости кредита">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="max_origination" type="INTEGER" remarks="Максимальная сумма комиссий, которая прибавится к полной стоимости кредита">
+            <column name="max_origination" type="FLOAT" remarks="Максимальная сумма комиссий, которая прибавится к полной стоимости кредита">
                 <constraints nullable="false"/>
             </column>
 

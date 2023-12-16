@@ -5,12 +5,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
-<!--    <include file="changesets/create-client-table.xml" relativeToChangelogFile="true" />-->
-    <include file="changesets/create-product-table.xml" relativeToChangelogFile="true" />
-    <include file="changesets/create-agreement-table.xml" relativeToChangelogFile="true" />
-    <include file="changesets/create-schedule-payment-table.xml" relativeToChangelogFile="true" />
-    <include file="changesets/create-foreign-keys.xml" relativeToChangelogFile="true" />
-    <include file="changesets/create-indexes.xml" relativeToChangelogFile="true" />
-    <include file="changesets/load-product-data.xml" relativeToChangelogFile="true" />
+    <includeAll path="changesets/" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

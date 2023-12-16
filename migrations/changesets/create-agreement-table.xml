@@ -18,23 +18,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="client_name" type="VARCHAR" remarks="ФИО клиента">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="client_age" type="INTEGER" remarks="Возраст клиента">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="client_phone_number" type="VARCHAR" remarks="Номер телефона клиента">
-                <constraints nullable="false"/>
-            </column>
-
-             <column name="client_passport_number" type="VARCHAR" remarks="Серия и номер паспорта клиента">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="client_salary" type="INTEGER" remarks="Месячный доход по мнению клиента">
+            <column name="client_id" type="INTEGER" remarks="Индекс клиента">
                 <constraints nullable="false"/>
             </column>
 
@@ -42,19 +26,19 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="principal" type="INTEGER" remarks="Сумма кредита">
+            <column name="principal" type="FLOAT" remarks="Сумма кредита">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="interest" type="INTEGER" remarks="Процентная ставка по кредиту">
+            <column name="interest" type="FLOAT" remarks="Процентная ставка по кредиту">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="origination" type="INTEGER" remarks="Сумма комиссий по кредиту">
+            <column name="origination" type="FLOAT" remarks="Сумма комиссий по кредиту">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="activation_time" type="TIMESTAMP" remarks="Дата и время активации договора">
+            <column name="activation_time" type="TIMESTAMP WITH TIME ZONE" remarks="Дата и время активации договора">
                 <constraints nullable="false"/>
             </column>
 
