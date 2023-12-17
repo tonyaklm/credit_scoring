@@ -1,0 +1,40 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet author="antonina" id="create-client-table">
+        <createTable tableName="client" remarks="Таблица клиентов">
+            <column autoIncrement="true" name="id" type="INTEGER" remarks="Индекс клиента">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="client_pkey"/>
+            </column>
+
+            <column name="client_name" type="VARCHAR" remarks="ФИО клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_age" type="INTEGER" remarks="Возраст клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_phone_number" type="VARCHAR" remarks="Номер телефона клиента">
+                <constraints nullable="false"/>
+            </column>
+
+             <column name="client_passport_number" type="VARCHAR" remarks="Серия и номер паспорта клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_salary" type="FLOAT" remarks="Месячный доход по мнению клиента">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

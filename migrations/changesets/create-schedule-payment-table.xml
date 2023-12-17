@@ -1,0 +1,52 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet author="antonina" id="create-schedule-payment-table">
+        <createTable tableName="schedule_payment" remarks="Таблица платежей">
+            <column autoIncrement="true" name="id" type="INTEGER" remarks="Индекс платежа">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="schedule_payment_pkey"/>
+            </column>
+
+            <column name="agreement_id" type="INTEGER" remarks="Номер договора, по которому производится платеж">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="planned_date" type="TIMESTAMP WITH TIME ZONE" remarks="Планируемая дата платежа">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="beginning_of_the_period" type="TIMESTAMP WITH TIME ZONE" remarks="Период, за который выплачивается долг, дата ОТ">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="end_of_the_period" type="TIMESTAMP WITH TIME ZONE" remarks="Период, за который выплачивается долг, дата ДО">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="principal_amount" type="FLOAT" remarks="Сумма выплаты для погашения тела долга">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="interest_amount" type="FLOAT" remarks="Сумма выплаты для погашения процентов по долгу">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_id" type="INTEGER" remarks="Порядковый номер платежа в рамках договора">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR" defaultValue="not paid" remarks="Статус платежа (оплаченный, просроченный, еще не оплаченный)">
+                <constraints nullable="false" checkConstraint="status IN ('paid', 'overdue', 'not paid')" />
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
