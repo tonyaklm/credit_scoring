@@ -1,0 +1,28 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet author="antonina" id="create-application-table">
+        <createTable tableName="application" remarks="Таблица заявок от клиентов">
+            <column autoIncrement="true" name="id" type="INTEGER" remarks="Индекс заявки">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="application_pkey"/>
+            </column>
+
+            <column name="client_id" type="INTEGER" remarks="Индекс клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR" defaultValue="new" remarks="Статус договора (новый, активированный, закрытый)">
+                <constraints nullable="false" checkConstraint="status IN ('new', 'active', 'closed')" />
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
