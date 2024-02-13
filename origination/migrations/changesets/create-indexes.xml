@@ -14,6 +14,10 @@
             <column name="client_id"/>
         </createIndex>
 
+        <createIndex tableName="application" indexName="product_index">
+            <column name="product_code"/>
+        </createIndex>
+
     </changeSet>
 
 </databaseChangeLog>

@@ -13,6 +13,7 @@ from sqlalchemy.exc import IntegrityError, DataError, DBAPIError
 from datetime import date, datetime
 import asyncio
 import typer
+import pytz
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -20,8 +21,11 @@ from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
 
-PRODUCT_ENGINE_URL = "postgresql+asyncpg://product_engine:product_engine@postgresql:5432/product_engine"
-ORIGINATION_URL = "postgresql+asyncpg://product_engine:product_engine@postgresql:5432/origination"
+# PRODUCT_ENGINE_URL = "postgresql+asyncpg://product_engine:product_engine@postgresql:5432/product_engine"
+# ORIGINATION_URL = "postgresql+asyncpg://product_engine:product_engine@postgresql:5432/origination"
+
+PRODUCT_ENGINE_URL = "postgresql+asyncpg://postgres:postgres@postgresql:5432/product_engine"
+ORIGINATION_URL = "postgresql+asyncpg://postgres:postgres@postgresql:5432/origination"
 
 pe_engine = create_async_engine(PRODUCT_ENGINE_URL, echo=True)
 PE_Base = sqlalchemy.orm.declarative_base()
@@ -49,12 +53,16 @@ async def init_models():
 class Application(Origination_Base):
     __tablename__ = 'application'
     id = Column(Integer, primary_key=True)
-    client_id = Column(Integer, primary_key=False)
+    client_id = Column(Integer, nullable=False)
+    product_code = Column(VARCHAR, nullable=False)
     status = Column(VARCHAR, nullable=False)
+    time_of_application = Column(sqlalchemy.types.DateTime(timezone=True), nullable=False)
+    disbursment_amount = Column(Float, nullable=False)
 
     __table_args__ = (
         PrimaryKeyConstraint('id', name='application_pkey'),
-        Index('client_id_index' 'client_id')
+        Index('client_id_index' 'client_id'),
+        # Index('product_index' 'product_code')
     )
 
 
@@ -207,13 +215,15 @@ class Repository:
         if deleted_rows_count == 0:
             raise HTTPException(status_code=404, detail="Объекта не существует")
 
-    async def update_item(self, table: PE_Base, column: str, value, changed_column, new_value, session: AsyncSession):
+    async def update_item(self, table: PE_Base, column: str, value, changed_column: str, new_value,
+                          session: AsyncSession):
         try:
-            stmt = update(table).where(getattr(table, column) == value).values(changed_column=new_value)
+            stmt = update(table).where(getattr(table, column) == value).values({changed_column: new_value})
             await session.execute(stmt)
             await session.commit()
         except DataError:
             raise HTTPException(status_code=404, detail="Объекта не существует")
+        print('OK')
 
 
 repo = Repository()
@@ -227,12 +237,9 @@ def calculateAge(birth_date_str: str) -> int:
     return age
 
 
-def close_application(application_id: int, session: AsyncSession):
-    await repo.update_item(Application, 'id', application_id, 'status', 'closed', session)
-
-
 @app.post("/application", status_code=200, summary="Set new application", response_model=ApplicationSchema)
-async def post_application(request: Request, session: AsyncSession = Depends(origination_get_session)):
+async def post_application(request: Request, session: AsyncSession = Depends(origination_get_session)
+                           , pe_session: AsyncSession = Depends(pe_get_session)):
     item = await request.json()
 
     try:
@@ -249,7 +256,7 @@ async def post_application(request: Request, session: AsyncSession = Depends(ori
     names = ['client_name', 'client_age', 'client_phone_number', 'client_passport_number', 'client_salary']
     values = [client_name, calculate_age, item['phone'], item['passport_number'], item['salary']]
 
-    results_json = await repo.select_by_criteria(Client, names, values, session,
+    results_json = await repo.select_by_criteria(Client, names, values, pe_session,
                                                  raise_error=False)
 
     if not results_json:
@@ -258,32 +265,50 @@ async def post_application(request: Request, session: AsyncSession = Depends(ori
                                                   'client_phone_number': item['phone'],
                                                   'client_passport_number': item['passport_number'],
                                                   'client_salary': item['salary']
-                                                  }, session)
+                                                  }, pe_session)
     else:
         print(results_json)
         client_id = results_json.id
 
+    product_code = str(item['product_code'])
+
+    application_names = ['client_id', 'product_code']
+    application_values = [client_id, product_code]
+
+    results_json = await repo.select_by_criteria(Application, application_names, application_values, session,
+                                                 raise_error=False)
+    moscow_tz = pytz.timezone("Europe/Moscow")
+    time_of_application = datetime.now(moscow_tz)
+
+    print(type(product_code))
+
     new_item = {'client_id': client_id,
+                'product_code': product_code,
+                'time_of_application': time_of_application,
+                'disbursment_amount': item['disbursment_amount'],
                 'status': 'new'
                 }
-    try:
+    if results_json and (results_json.disbursment_amount == item['disbursment_amount'] or (
+            results_json.time_of_application - time_of_application).days < 7):
+        # совпадение по полям или меньше 7 дней с прошлой заявки на этот же продукт
+        application_id = results_json.id
+        try:
+            await repo.update_item(Application, 'id', application_id, 'status', 'closed', session)
+        except HTTPException:
+            raise HTTPException(status_code=404, detail="Объекта не существует")
+        JSONResponse(status_code=409, content={"application_id": application_id})
+    else:
         application_id = await repo.post_item(Application, new_item, session)
-    except HTTPException:
-        names = ['client_id', 'status']
-        values = [client_id, 'new']
-        selected_ids = await repo.select_by_criteria(Application, names, values, session,
-                                                     raise_error=False)
-        application_id = selected_ids['application_id']
-        await close_application(application_id, session)
-        return {"application_id": application_id}, 409
 
-    print(application_id)
     return {"application_id": application_id}
 
 
-@app.post("/application/{application_id}/close", status_code=204, summary="Delete application by its code")
+@app.post("/application/{application_id}/close", status_code=204, summary="Delete application by its id")
 async def close_application(application_id, session: AsyncSession = Depends(pe_get_session)):
-    await close_application(application_id, session)
+    try:
+        await repo.update_item(Application, 'id', application_id, 'status', 'closed', session)
+    except HTTPException:
+        raise HTTPException(status_code=404, detail="Объекта не существует")
 
 
 if __name__ == "__main__":

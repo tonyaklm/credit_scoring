@@ -7,7 +7,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_MULTIPLE_DATABASES: product_engine
+      POSTGRES_USER: postgres
+      POSTGRES_MULTIPLE_DATABASES: product_engine, origination
     ports:
       - "5432:5432"
     networks:

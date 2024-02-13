@@ -18,7 +18,19 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="VARCHAR" defaultValue="new" remarks="Статус договора (новый, активированный, закрытый)">
+            <column name="product_code" type="VARCHAR" remarks="Код продукта">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="time_of_application" type="TIMESTAMP WITH TIME ZONE" remarks="Время подачи заявки">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="disbursment_amount" type="FLOAT" remarks="Запрошенная сумма">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR" defaultValue="new" remarks="Статус заявки (новый, активированный, закрытый)">
                 <constraints nullable="false" checkConstraint="status IN ('new', 'active', 'closed')" />
             </column>
 
