@@ -217,13 +217,9 @@ class Repository:
 
     async def update_item(self, table: PE_Base, column: str, value, changed_column: str, new_value,
                           session: AsyncSession):
-        try:
-            stmt = update(table).where(getattr(table, column) == value).values({changed_column: new_value})
-            await session.execute(stmt)
-            await session.commit()
-        except DataError:
-            raise HTTPException(status_code=404, detail="Объекта не существует")
-        print('OK')
+        stmt = update(table).where(getattr(table, column) == value).values({changed_column: new_value})
+        await session.execute(stmt)
+        await session.commit()
 
 
 repo = Repository()
@@ -292,24 +288,24 @@ async def post_application(request: Request, session: AsyncSession = Depends(ori
             results_json.time_of_application - time_of_application).days < 7):
         # совпадение по полям или меньше 7 дней с прошлой заявки на этот же продукт
         application_id = results_json.id
-        try:
-            await repo.update_item(Application, 'id', application_id, 'status', 'closed', session)
-        except HTTPException:
-            raise HTTPException(status_code=404, detail="Объекта не существует")
-        JSONResponse(status_code=409, content={"application_id": application_id})
+
+        await repo.update_item(Application, 'id', application_id, 'status', 'closed', session)
+        return JSONResponse(status_code=409, content={"application_id": application_id,
+                                                      "message": "Заявка уже существует"})
     else:
         application_id = await repo.post_item(Application, new_item, session)
 
     return {"application_id": application_id}
 
 
-@app.post("/application/{application_id}/close", status_code=204, summary="Delete application by its id")
-async def close_application(application_id, session: AsyncSession = Depends(pe_get_session)):
-    try:
-        await repo.update_item(Application, 'id', application_id, 'status', 'closed', session)
-    except HTTPException:
-        raise HTTPException(status_code=404, detail="Объекта не существует")
+@app.post("/application/{application_id}/close", status_code=200, summary="Close application by its id")
+async def close_application(application_id, session: AsyncSession = Depends(origination_get_session)):
+    application_id = int(application_id)
+    await repo.select_by_criteria(Application, ['id'], [application_id], session)
+
+    await repo.update_item(Application, 'id', application_id, 'status', 'closed', session)
 
 
 if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", reload=true)
     cli()

@@ -19,7 +19,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-
 app = FastAPI()
 
 # DATABASE_URL = "postgresql+asyncpg://product_engine:product_engine@postgresql:5432/product_engine"
@@ -309,4 +308,5 @@ async def say_hello(name: str):
 
 
 if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", reload=true)
     cli()

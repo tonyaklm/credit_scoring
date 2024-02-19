@@ -42,6 +42,39 @@ services:
     volumes:
       - ./configs/servers.json:/pgadmin4/servers.json:ro
       - ./configs/pgpass:/pgadmin4/pgpass:ro
+  origination:
+    container_name: "origination"
+    image: origination
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:5002:8000"
+    build:
+      context: ../../origination
+      dockerfile: src/Dockerfile
+    networks:
+      - fintech-network
+  product_engine:
+    container_name: "product_engine"
+    image: product_engine
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:5001:8000"
+    build:
+      context: ../../product_engine
+      dockerfile: src/Dockerfile
+    networks:
+      - fintech-network
+  gateway:
+    container_name: "gateway"
+    image: gateway
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:5000:8000"
+    build:
+      context: ../../gateway
+      dockerfile: src/Dockerfile
+    networks:
+      - fintech-network
 
 networks:
   fintech-network:
