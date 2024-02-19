@@ -24,7 +24,7 @@ from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
 
-MY_IP_ADDRESS = ""  # мой внешний адрес вашего ПК
+MY_IP_ADDRESS = ""  # мой внешний адрес ПК
 
 PE_URL = f"http://{MY_IP_ADDRESS}:5001"
 ORIGINATION_URL = f"http://{MY_IP_ADDRESS}:5002"
@@ -61,7 +61,8 @@ def db_init_models():
     print("Done")
 
 
-@app.get("/product", status_code=200, summary="Get all products", response_model=list[ProductSchema])
+@app.get("/product", status_code=200, summary="Redirecting a request get all products to PE",
+         response_model=list[ProductSchema])
 async def get_products():
     logging.info('I got your request')
     async with httpx.AsyncClient() as client:
@@ -69,14 +70,15 @@ async def get_products():
         return JSONResponse(status_code=response.status_code, content=response.json())
 
 
-@app.get("/product/{product_code}", status_code=200, summary="Get product by it's code", response_model=ProductSchema)
+@app.get("/product/{product_code}", status_code=200, summary="Redirecting a request get product by it's code to PE",
+         response_model=ProductSchema)
 async def get_by_product_code(product_code):
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{PE_URL}/product/{product_code}")
         return JSONResponse(status_code=response.status_code, content=response.json())
 
 
-@app.post("/agreement", status_code=200, summary="Set agreement by it's client and product",
+@app.post("/agreement", status_code=200, summary="Redirecting a request set agreement to PE",
           response_model=AgreementSchema)
 async def post_agreement(request: Request):
     item = await request.json()
@@ -86,7 +88,8 @@ async def post_agreement(request: Request):
         return JSONResponse(status_code=response.status_code, content=response.json())
 
 
-@app.post("/application", status_code=200, summary="Set new application", response_model=ApplicationSchema)
+@app.post("/application", status_code=200, summary="Redirecting a request set new application to Origination",
+          response_model=ApplicationSchema)
 async def post_application(request: Request):
     item = await request.json()
 
@@ -95,7 +98,8 @@ async def post_application(request: Request):
         return JSONResponse(status_code=response.status_code, content=response.json())
 
 
-@app.post("/application/{application_id}/close", status_code=200, summary="Close application by its id")
+@app.post("/application/{application_id}/close", status_code=200,
+          summary="Redirecting a request close application to Origination")
 async def close_application(application_id):
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{ORIGINATION_URL}/application/{application_id}/close")
