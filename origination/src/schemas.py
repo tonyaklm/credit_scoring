@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+import datetime
 
 
 class ApplicationSchema(BaseModel):
@@ -15,4 +16,19 @@ class CreateApplication(BaseModel):
     email: str
     phone: str
     salary: float
+    term: int
+    interest: float
     disbursment_amount: float
+
+
+class BaseApplication(BaseModel):
+    id: int
+    agreement_id: int
+    product_code: str
+    time_of_application: datetime.datetime
+    status: str
+
+class FinishApplication(BaseModel):
+    agreement_id: int
+    product_code: str
+

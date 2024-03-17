@@ -20,9 +20,9 @@ class Repository:
         response_json = results.scalars().all()
         if not response_json:
             return {}
-        return response_json[0]
+        return response_json
 
-    async def select_all(self, table: Base, session: AsyncSession) -> json:
+    async def select_all(self, table: Base, session: AsyncSession) -> list[json]:
         """Makes select all available items"""
 
         stmt = select(table)

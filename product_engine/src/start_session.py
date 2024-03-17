@@ -22,7 +22,7 @@ async def init_models():
         await conn.run_sync(Base.metadata.create_all)
 
 
-async def get_session() -> AsyncSession:
+async def pe_get_session() -> AsyncSession:
     """Getting async session"""
     async with async_session() as session:
         yield session

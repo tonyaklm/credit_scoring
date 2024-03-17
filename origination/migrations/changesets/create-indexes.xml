@@ -10,8 +10,8 @@
 
     <changeSet author="antonina" id="create-indexes">
 
-        <createIndex tableName="application" indexName="client_index">
-            <column name="client_id"/>
+        <createIndex tableName="application" indexName="agreement_index">
+            <column name="agreement_id"/>
         </createIndex>
 
         <createIndex tableName="application" indexName="product_index">

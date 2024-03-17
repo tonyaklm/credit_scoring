@@ -51,7 +51,7 @@ class Product(Base):
 class Agreement(Base):
     __tablename__ = 'agreement'
     id: Mapped[int] = mapped_column(primary_key=True)
-    product_id: Mapped[int] = mapped_column(nullable=False)
+    product_code: Mapped[str] = mapped_column(nullable=False)
     client_id: Mapped[int] = mapped_column(nullable=False)
     term: Mapped[int] = mapped_column(nullable=False)
     principal: Mapped[float] = mapped_column(nullable=False)
@@ -63,8 +63,8 @@ class Agreement(Base):
 
     __table_args__ = (
         PrimaryKeyConstraint('id', name='agreement_pkey'),
-        Index('product_index' 'product_id'),
+        Index('product_index' 'product_code'),
         Index('client_index' 'client_id'),
-        ForeignKeyConstraint(['product_id'], ['product.id']),
+        ForeignKeyConstraint(['product_code'], ['product.code']),
         ForeignKeyConstraint(['client_id'], ['client.id'])
     )

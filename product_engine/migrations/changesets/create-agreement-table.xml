@@ -14,7 +14,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="agreement_pkey"/>
             </column>
 
-            <column name="product_id" type="INTEGER" remarks="Номер родукта, к которому относится договор">
+            <column name="product_code" type="VARCHAR" remarks="Код родукта, к которому относится договор">
                 <constraints nullable="false"/>
             </column>
 

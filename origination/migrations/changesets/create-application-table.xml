@@ -1,9 +1,9 @@
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
@@ -14,11 +14,11 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="application_pkey"/>
             </column>
 
-            <column name="client_id" type="INTEGER" remarks="Индекс клиента">
+            <column name="product_code" type="VARCHAR" remarks="Код продукта">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="product_code" type="VARCHAR" remarks="Код продукта">
+            <column name="agreement_id" type="INTEGER" remarks="Индекс кредитного договора">
                 <constraints nullable="false"/>
             </column>
 
@@ -26,12 +26,9 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="disbursment_amount" type="FLOAT" remarks="Запрошенная сумма">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="status" type="VARCHAR" defaultValue="new" remarks="Статус заявки (новый, активированный, закрытый)">
-                <constraints nullable="false" checkConstraint="status IN ('new', 'active', 'closed')" />
+            <column name="status" type="VARCHAR" defaultValue="new"
+                    remarks="Статус заявки (новый, на оценивании, закрытый)">
+                <constraints nullable="false" checkConstraint="status IN ('new', 'scoring', 'closed')"/>
             </column>
 
         </createTable>

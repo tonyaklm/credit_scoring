@@ -88,6 +88,17 @@ services:
       dockerfile: src/Dockerfile
     networks:
       - fintech-network
+  scoring:
+    container_name: "scoring"
+    image: scoring
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:5003:8000"
+    build:
+      context: ../../scoring
+      dockerfile: src/Dockerfile
+    networks:
+      - fintech-network
 
 networks:
   fintech-network:

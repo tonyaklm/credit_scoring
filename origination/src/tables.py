@@ -13,14 +13,17 @@ class Base(DeclarativeBase):
 class Application(Base):
     __tablename__ = 'application'
     id: Mapped[int] = mapped_column(primary_key=True)
-    client_id: Mapped[int] = mapped_column(nullable=False)
+    agreement_id: Mapped[int] = mapped_column(nullable=False)
     product_code: Mapped[str] = mapped_column(nullable=False)
     status: Mapped[str] = mapped_column(nullable=False)
     time_of_application: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), nullable=False)
-    disbursment_amount: Mapped[float] = mapped_column(nullable=False)
 
     __table_args__ = (
         PrimaryKeyConstraint('id', name='application_pkey'),
-        Index('client_id_index' 'client_id')
+        Index('agreement_index' 'agreement_id'),
+        Index('product_index' 'product_code')
     )
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
