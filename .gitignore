@@ -65,6 +65,9 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+**/.DS_Store
+**/.idea
+
 # Scrapy stuff:
 .scrapy
 

@@ -1,26 +1,13 @@
-import random
-
-import sqlalchemy
-from fastapi import Depends
-from fastapi import Request, FastAPI, HTTPException
+from fastapi import Request, FastAPI
 from fastapi.responses import JSONResponse
-from flask_restful.representations import json
-from pydantic import BaseModel
-from sqlalchemy import select, delete, Column, Integer, Float, \
-    VARCHAR, PrimaryKeyConstraint, UniqueConstraint, ForeignKeyConstraint, Index, update
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError, DataError, DBAPIError
-from datetime import date, datetime
+import json
 import asyncio
 import uvicorn
 import typer
-import pytz
 import httpx
 import logging
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import sessionmaker
+import schemas
 
 app = FastAPI()
 
@@ -28,29 +15,6 @@ MY_IP_ADDRESS = ""  # мой внешний адрес ПК
 
 PE_URL = f"http://{MY_IP_ADDRESS}:5001"
 ORIGINATION_URL = f"http://{MY_IP_ADDRESS}:5002"
-
-
-class ProductSchema(BaseModel):
-    id: int
-    title: str
-    code: str
-    min_term: int
-    max_term: int
-    min_principal: float
-    max_principal: float
-    min_interest: float
-    max_interest: float
-    min_origination: float
-    max_origination: float
-
-
-class AgreementSchema(BaseModel):
-    agreement_id: int
-
-
-class ApplicationSchema(BaseModel):
-    application_id: int
-
 
 cli = typer.Typer()
 
@@ -62,7 +26,7 @@ def db_init_models():
 
 
 @app.get("/product", status_code=200, summary="Redirecting a request get all products to PE",
-         response_model=list[ProductSchema])
+         response_model=list[schemas.ProductSchema])
 async def get_products():
     logging.info('I got your request')
     async with httpx.AsyncClient() as client:
@@ -71,15 +35,15 @@ async def get_products():
 
 
 @app.get("/product/{product_code}", status_code=200, summary="Redirecting a request get product by it's code to PE",
-         response_model=ProductSchema)
-async def get_by_product_code(product_code):
+         response_model=schemas.ProductSchema)
+async def get_by_product_code(product_code: str):
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{PE_URL}/product/{product_code}")
         return JSONResponse(status_code=response.status_code, content=response.json())
 
 
 @app.post("/agreement", status_code=200, summary="Redirecting a request set agreement to PE",
-          response_model=AgreementSchema)
+          response_model=schemas.AgreementSchema)
 async def post_agreement(request: Request):
     item = await request.json()
 
@@ -89,7 +53,7 @@ async def post_agreement(request: Request):
 
 
 @app.post("/application", status_code=200, summary="Redirecting a request set new application to Origination",
-          response_model=ApplicationSchema)
+          response_model=schemas.ApplicationSchema)
 async def post_application(request: Request):
     item = await request.json()
 
@@ -100,7 +64,7 @@ async def post_application(request: Request):
 
 @app.post("/application/{application_id}/close", status_code=200,
           summary="Redirecting a request close application to Origination")
-async def close_application(application_id):
+async def close_application(application_id: int):
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{ORIGINATION_URL}/application/{application_id}/close")
         return JSONResponse(status_code=response.status_code, content=response.json())

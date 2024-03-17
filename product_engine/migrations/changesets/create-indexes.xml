@@ -29,14 +29,6 @@
             <column name="client_passport_number"/>
         </createIndex>
 
-        <createIndex tableName="client" indexName="phone_index">
-            <column name="client_phone_number"/>
-        </createIndex>
-
-        <createIndex tableName="client" indexName="name_index">
-            <column name="client_name"/>
-        </createIndex>
-
     </changeSet>
 
 </databaseChangeLog>

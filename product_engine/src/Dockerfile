@@ -10,6 +10,6 @@ RUN apt-get -y update; apt-get -y install curl
 
 EXPOSE 8000
 
-COPY src/main.py main.py
+COPY src/ /
 
 CMD ["python", "-m", "uvicorn", "--host", "0.0.0.0", "main:app"]

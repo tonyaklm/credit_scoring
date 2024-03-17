@@ -27,7 +27,7 @@
             </column>
 
              <column name="client_passport_number" type="VARCHAR" remarks="Серия и номер паспорта клиента">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true" uniqueConstraintName="passport_sk"/>
             </column>
 
             <column name="client_salary" type="FLOAT" remarks="Месячный доход по мнению клиента">

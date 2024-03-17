@@ -2,6 +2,8 @@ version: "3"
 
 services:
   postgresql:
+    build:
+      dockerfile: Dockerfile
     container_name: "fintech-postgresql"
     image: postgres:15.5
     restart: unless-stopped
@@ -20,6 +22,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  liquibase-migrations:
+    image: liquibase/liquibase:4.19.0
+    networks:
+      - fintech-network
+    depends_on:
+      - postgresql
+    volumes:
+      - ../../origination/migrations:/orig_app
+      - ../../product_engine/migrations:/pe_app
+    command: bash -c "liquibase --defaultsFile=/orig_app/dev.properties update && liquibase --defaultsFile=/pe_app/dev.properties update"
   pgadmin:
     container_name: "fintech-pgadmin"
     image: dpage/pgadmin4
