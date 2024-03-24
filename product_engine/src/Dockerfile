@@ -1,15 +1,15 @@
 FROM python:3.10-slim
 
 WORKDIR .
-RUN pwd && ls
 
-COPY requirements.txt requirements.txt
+COPY product_engine/requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 RUN pip3 install --upgrade pip
 RUN apt-get -y update; apt-get -y install curl
 
 EXPOSE 8000
 
-COPY src/ /
+COPY product_engine/src/ /
+COPY common/ /common/
 
-CMD ["python", "-m", "uvicorn", "--host", "0.0.0.0", "main:app"]
+CMD ["python", "main.py"]

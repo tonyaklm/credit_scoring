@@ -1,18 +1,8 @@
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-import asyncio
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 import httpx
 from start_session import pe_get_session
-import schemas
 from tables import Agreement
-from Repository import Repository
-import json
-
-MY_IP_ADDRESS = ""
-
-ORIGINATION_URL = f"http://{MY_IP_ADDRESS}:5002"
-repo = Repository()
+from common.Repository import repo
+from config import settings
 
 
 async def send_application_again(agreement: Agreement):
@@ -25,7 +15,7 @@ async def send_application_again(agreement: Agreement):
     headers = {"Content-Type": "application/json"}
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.post(f"{ORIGINATION_URL}/application/by/agreement",
+            response = await client.post(f"{settings.origination_url}/application/by/agreement",
                                          json=agreement_data, headers=headers)
         except httpx.ConnectError:
             return False
@@ -44,7 +34,7 @@ async def check_agreement_in_origination(agreement_id: int):
 
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(f"{ORIGINATION_URL}/application/{agreement_id}")
+            response = await client.get(f"{settings.origination_url}/application/{agreement_id}")
         except httpx.ConnectError:
             return True
         if response.status_code == 404:
@@ -59,8 +49,3 @@ async def check_agreements():
         if not await check_agreement_in_origination(agreement.id):
             await send_application_again(agreement)
 
-
-def start_pe_scheduler():
-    pe_scheduler = AsyncIOScheduler()
-    pe_scheduler.add_job(check_agreements, 'interval', minutes=1)
-    pe_scheduler.start()

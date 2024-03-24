@@ -1,18 +1,9 @@
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-import asyncio
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 import httpx
 from start_session import origination_get_session
-import schemas
 from tables import Application
-from Repository import Repository
+from common.Repository import repo
 import json
-
-MY_IP_ADDRESS = ""
-
-SCORING_URL = f"http://{MY_IP_ADDRESS}:5003"
-repo = Repository()
+from config import settings
 
 
 async def update_status(application_id: int, new_status: str):
@@ -34,7 +25,7 @@ async def send_application_to_scoring(application: Application):
     headers = {"Content-Type": "application/json"}
     async with httpx.AsyncClient() as client:
         try:
-            await client.post(f"{SCORING_URL}/",
+            await client.post(f"{settings.scoring_url}/",
                               json=json.dumps(application.as_dict(), indent=4, sort_keys=True, default=str),
                               headers=headers)
         except httpx.ConnectError:
@@ -48,9 +39,3 @@ async def scan_and_send_applications():
     for application in new_applications:
         if await send_application_to_scoring(application):
             await update_status(application.id, "scoring")
-
-
-def start_orig_scheduler():
-    orig_scheduler = AsyncIOScheduler()
-    orig_scheduler.add_job(scan_and_send_applications, 'interval', minutes=1)
-    orig_scheduler.start()

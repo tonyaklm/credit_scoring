@@ -62,8 +62,8 @@ services:
     ports:
       - "0.0.0.0:5002:8000"
     build:
-      context: ../../origination
-      dockerfile: src/Dockerfile
+      context: ../../
+      dockerfile: origination/src/Dockerfile
     networks:
       - fintech-network
   product_engine:
@@ -73,8 +73,8 @@ services:
     ports:
       - "0.0.0.0:5001:8000"
     build:
-      context: ../../product_engine
-      dockerfile: src/Dockerfile
+      context: ../../
+      dockerfile: product_engine/src/Dockerfile
     networks:
       - fintech-network
   gateway:

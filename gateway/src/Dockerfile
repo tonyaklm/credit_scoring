@@ -12,4 +12,4 @@ EXPOSE 8000
 
 COPY src/ /
 
-CMD ["python", "-m", "uvicorn", "--host", "0.0.0.0", "main:app"]
+CMD ["python", "main.py"]

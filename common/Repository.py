@@ -52,3 +52,6 @@ class Repository:
         stmt = update(table).where(getattr(table, column) == value).values({changed_column: new_value})
         await session.execute(stmt)
         await session.commit()
+
+
+repo = Repository()

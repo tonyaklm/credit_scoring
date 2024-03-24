@@ -4,11 +4,9 @@ import sqlalchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 import typer
 import asyncio
+from config import settings
 
-# ORIGINATION_URL = "postgresql+asyncpg://product_engine:product_engine@postgresql:5432/origination"
-ORIGINATION_URL = "postgresql+asyncpg://postgres:postgres@postgresql:5432/origination"
-
-origination_engine = create_async_engine(ORIGINATION_URL, echo=True)
+origination_engine = create_async_engine(settings.database_url, echo=True)
 Origination_Base = sqlalchemy.orm.declarative_base()
 origination_async_session = sessionmaker(
     origination_engine, class_=AsyncSession, expire_on_commit=False
