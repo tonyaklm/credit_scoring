@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import schemas
 from datetime import datetime
 from common.Repository import repo
+from common.AgreementStatus import AgreementStatus
 from tables import Product, Agreement
 from start_session import pe_get_session
 from validation import check_between
@@ -72,7 +73,7 @@ async def post_agreement(agreement: schemas.CreateAgreement, pe_session: AsyncSe
                                                         'interest': agreement.interest,
                                                         'origination': origination_amount,
                                                         'activation_time': datetime.now(moscow_tz),
-                                                        'status': 'new',
+                                                        'status': AgreementStatus.new.value,
                                                         }, pe_session)
     except IntegrityError:
         raise HTTPException(status_code=409, detail="Договор уже существует")

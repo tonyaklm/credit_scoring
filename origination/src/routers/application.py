@@ -11,6 +11,7 @@ from common.Repository import repo
 from tables import Application
 from config import settings
 from start_session import origination_get_session
+from common.ApplicationStatus import ApplicationStatus
 
 router = APIRouter()
 
@@ -31,7 +32,7 @@ async def post_application(application: schemas.CreateApplication,
         # совпадение по полям или меньше 7 дней с прошлой заявки на этот же продукт
         application_id = results_json[0].id
 
-        await repo.update_item(Application, 'id', application_id, 'status', 'closed', orig_session)
+        await repo.update_item(Application, 'id', application_id, 'status', ApplicationStatus.closed.value, orig_session)
         return JSONResponse(status_code=409, content={"application_id": application_id,
                                                       "message": "Заявка уже существует"})
 
@@ -52,7 +53,7 @@ async def post_application(application: schemas.CreateApplication,
     new_item = {'agreement_id': agreement_id,
                 'product_code': application.product_code,
                 'time_of_application': time_of_application,
-                'status': 'new'
+                'status': ApplicationStatus.new.value
                 }
     application_id = await repo.post_item(Application, new_item, orig_session)
 
@@ -68,7 +69,7 @@ async def close_application(application_id: int, orig_session: AsyncSession = De
         return JSONResponse(status_code=404, content={
             "message": f"Заявки {application_id} не существует"})
 
-    await repo.update_item(Application, 'id', application_id, 'status', 'closed', orig_session)
+    await repo.update_item(Application, 'id', application_id, 'status', ApplicationStatus.closed.value, orig_session)
 
 
 @router.get("/application/{agreement_id}", status_code=200, summary="Get applications by agreement",
@@ -92,7 +93,7 @@ async def post_application_by_agreement(agreement_data: schemas.FinishApplicatio
     new_item = {'agreement_id': application_item["agreement_id"],
                 'product_code': application_item["product_code"],
                 'time_of_application': time_of_application,
-                'status': 'new'
+                'status': ApplicationStatus.new.value
                 }
 
     application_id = await repo.post_item(Application, new_item, orig_session)

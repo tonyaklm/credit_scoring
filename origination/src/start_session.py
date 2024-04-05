@@ -2,8 +2,6 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 import sqlalchemy
 from sqlalchemy.ext.asyncio import AsyncSession
-import typer
-import asyncio
 from config import settings
 
 origination_engine = create_async_engine(settings.database_url, echo=True)
@@ -13,22 +11,7 @@ origination_async_session = sessionmaker(
 )
 
 
-async def init_models():
-    """Initializing models"""
-
-    async with origination_engine.begin() as conn:
-        await conn.run_sync(Origination_Base.metadata.create_all)
-
-
 async def origination_get_session() -> AsyncSession:
     """Getting async session Origination"""
     async with origination_async_session() as session:
         yield session
-
-
-cli = typer.Typer()
-
-
-@cli.command()
-def db_init_models():
-    asyncio.run(init_models())

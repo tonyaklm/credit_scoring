@@ -23,7 +23,7 @@ services:
       timeout: 5s
       retries: 5
 
-  liquibase-migrations:
+  liquibase-migrations-origination:
     image: liquibase/liquibase:4.19.0
     networks:
       - fintech-network
@@ -31,8 +31,17 @@ services:
       - postgresql
     volumes:
       - ../../origination/migrations:/orig_app
-      - ../../product_engine/migrations:/pe_app
-    command: bash -c "liquibase --defaultsFile=/orig_app/dev.properties update && liquibase --defaultsFile=/pe_app/dev.properties update"
+    command: --defaultsFile=/orig_app/dev.properties update
+
+  liquibase-migrations-product_engine:
+      image: liquibase/liquibase:4.19.0
+      networks:
+        - fintech-network
+      depends_on:
+        - postgresql
+      volumes:
+        - ../../product_engine/migrations:/pe_app
+      command: --defaultsFile=/pe_app/dev.properties update
   pgadmin:
     container_name: "fintech-pgadmin"
     image: dpage/pgadmin4

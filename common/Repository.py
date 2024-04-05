@@ -20,7 +20,7 @@ class Repository:
         results = await session.execute(items)
         response_json = results.scalars().all()
         if not response_json:
-            return {}
+            return []
         return response_json
 
     async def select_all(self, table: Base, session: AsyncSession) -> json:

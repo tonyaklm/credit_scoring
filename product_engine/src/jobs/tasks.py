@@ -2,7 +2,9 @@ import httpx
 from start_session import pe_get_session
 from tables import Agreement
 from common.Repository import repo
+from common.AgreementStatus import AgreementStatus
 from config import settings
+from http import HTTPStatus
 
 
 async def send_application_again(agreement: Agreement):
@@ -26,7 +28,7 @@ async def get_new_agreements():
     """ Возвращает все кредитные договоры со статусом NEW"""
 
     async for pe_session in pe_get_session():
-        return await repo.select_by_criteria(Agreement, ['status'], ['new'], pe_session)
+        return await repo.select_by_criteria(Agreement, ['status'], [AgreementStatus.new.value], pe_session)
 
 
 async def check_agreement_in_origination(agreement_id: int):
@@ -37,7 +39,7 @@ async def check_agreement_in_origination(agreement_id: int):
             response = await client.get(f"{settings.origination_url}/application/{agreement_id}")
         except httpx.ConnectError:
             return True
-        if response.status_code == 404:
+        if response.status_code == HTTPStatus.NOT_FOUND:
             return False
     return True
 
@@ -48,4 +50,3 @@ async def check_agreements():
     for agreement in new_agreements:
         if not await check_agreement_in_origination(agreement.id):
             await send_application_again(agreement)
-
