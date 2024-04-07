@@ -15,13 +15,18 @@ from tables import Product, Agreement
 from start_session import pe_get_session
 from validation import check_between
 from routers.clients import check_client, post_client
+from producer.AIOWebProducer import get_producer, AIOWebProducer
+from producer.produce import kafka_produce
+from config import settings
 
 router = APIRouter()
 
 
 @router.post("/agreement", status_code=200, summary="Set agreement by it's client and product",
              response_model=schemas.AgreementSchema, tags=["agreements"])
-async def post_agreement(agreement: schemas.CreateAgreement, pe_session: AsyncSession = Depends(pe_get_session)):
+async def post_agreement(agreement: schemas.CreateAgreement,
+                         pe_session: AsyncSession = Depends(pe_get_session),
+                         producer: AIOWebProducer = Depends(get_producer)):
     results_json = await check_client(agreement, pe_session)
 
     if not results_json:
@@ -79,5 +84,12 @@ async def post_agreement(agreement: schemas.CreateAgreement, pe_session: AsyncSe
         raise HTTPException(status_code=409, detail="Договор уже существует")
     except DBAPIError or DataError:
         raise HTTPException(status_code=400, detail="Переданы неверные данные о договоре")
+
+    await kafka_produce(schemas.ProducerMessage(
+        agreement_id=agreement_id,
+        client_id=client_id,
+        principal_amount=principal_amount
+
+    ), settings.kafka_produce_topic, producer)
 
     return {"agreement_id": agreement_id}

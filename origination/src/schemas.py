@@ -28,7 +28,7 @@ class BaseApplication(BaseModel):
     time_of_application: datetime.datetime
     status: str
 
+
 class FinishApplication(BaseModel):
     agreement_id: int
     product_code: str
-

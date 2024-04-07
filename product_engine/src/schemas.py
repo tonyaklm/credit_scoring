@@ -65,3 +65,9 @@ class ClientSchema(BaseModel):
     client_phone_number: str
     client_passport_number: str
     client_salary: float
+
+
+class ProducerMessage(BaseModel):
+    agreement_id: int
+    client_id: int
+    principal_amount: float
