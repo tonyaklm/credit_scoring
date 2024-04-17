@@ -13,7 +13,6 @@ router = APIRouter()
 @router.get("/product", status_code=200, summary="Redirecting a request get all products to PE",
             response_model=list[schemas.ProductSchema], tags=["product engine"])
 async def get_products():
-    logging.info('I got your request')
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{settings.product_engine_url}/product")
         return JSONResponse(status_code=response.status_code, content=response.json())
